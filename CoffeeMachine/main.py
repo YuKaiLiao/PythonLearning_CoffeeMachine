@@ -37,9 +37,6 @@ TotalMoneyGotten = 0
 
 def make_the_coffee(sz_type):
     print(f"your order is {sz_type}.")
-    sufficient = check_the_coffee_ingredient(sz_type)
-    if not sufficient[0]:
-        print(f"Sorry there is not enough {sufficient[1]}.")
 
 
 def show_ingredients_amount():
@@ -61,6 +58,24 @@ def check_the_coffee_ingredient(sz_type):
     return [True, ""]
 
 
+def do_transaction(coffee_type):
+    print("Please insert coins.")
+    quarter_number = float(input("How many quarters?: "))
+    dime_number = float(input("How many dimes?: "))
+    nickel_number = float(input("How many nickel?: "))
+    penny_number = float(input("How many pennies?: "))
+    total_amount_money = 0.25 * quarter_number + dime_number * 0.1 + nickel_number * 0.05 + penny_number * 0.01
+    if MENU[coffee_type]["cost"] > total_amount_money:
+        print("Sorry that's not enough money. Money refunded.")
+        return False
+    elif MENU[coffee_type]["cost"] < total_amount_money:
+        refund = total_amount_money - MENU[coffee_type]["cost"]
+        print(f"Here is ${round(refund, 2)} dollars in change.”")
+    global TotalMoneyGotten
+    TotalMoneyGotten += MENU[coffee_type]["cost"]
+    return True
+
+
 while MachineOn:
     UserAnswer = input("What would you like? (espresso/latte/cappuccino): ")
     if UserAnswer == "report":
@@ -69,4 +84,11 @@ while MachineOn:
         print("Turn off the machine!!")
         MachineOn = False
     elif UserAnswer == "espresso" or UserAnswer == "latte" or UserAnswer == "cappuccino":
+        sufficient = check_the_coffee_ingredient(UserAnswer)
+        if not sufficient[0]:
+            print(f"Sorry there is not enough {sufficient[1]}.")
+            continue
+        isEnoughMoney = do_transaction(UserAnswer)
+        if not isEnoughMoney:
+            continue
         make_the_coffee(UserAnswer)
