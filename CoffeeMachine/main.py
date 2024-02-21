@@ -37,6 +37,11 @@ TotalMoneyGotten = 0
 
 def make_the_coffee(sz_type):
     print(f"your order is {sz_type}.")
+    global resources
+    resources["water"] -= MENU[sz_type]["ingredients"]["water"]
+    resources["milk"] -= MENU[sz_type]["ingredients"]["milk"]
+    resources["coffee"] -= MENU[sz_type]["ingredients"]["coffee"]
+    print(f"Here is your {sz_type} ☕ Enjoy.")
 
 
 def show_ingredients_amount():
@@ -44,7 +49,7 @@ def show_ingredients_amount():
     water: {resources["water"]}
     milk: {resources["milk"]}
     coffee: {resources["coffee"]}
-    money: {TotalMoneyGotten}
+    money: ${TotalMoneyGotten}
     """)
 
 
